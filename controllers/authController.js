@@ -96,6 +96,75 @@ exports.updateDetails = async (req, res, next) => {
   }
 };
 
+// @desc    Create demo users (Development only)
+// @route   POST /api/auth/create-demo-users
+// @access  Public
+exports.createDemoUsers = async (req, res, next) => {
+  try {
+    // Only allow in development environment
+    if (process.env.NODE_ENV === 'production') {
+      return next(new ErrorResponse('Not available in production', 403));
+    }
+
+    const demoUsers = [
+      {
+        username: 'demo_user',
+        email: 'demo@movieexplorer.com',
+        password: 'password123',
+        name: 'Demo User'
+      },
+      {
+        username: 'john_doe',
+        email: 'john@example.com',
+        password: 'password123',
+        name: 'John Doe'
+      },
+      {
+        username: 'jane_smith',
+        email: 'jane@example.com',
+        password: 'password123',
+        name: 'Jane Smith'
+      }
+    ];
+
+    const createdUsers = [];
+
+    for (const userData of demoUsers) {
+      try {
+        // Check if user already exists
+        const existingUser = await User.findOne({ 
+          $or: [
+            { username: userData.username },
+            { email: userData.email }
+          ]
+        });
+
+        if (!existingUser) {
+          const user = await User.create(userData);
+          createdUsers.push({
+            username: user.username,
+            email: user.email,
+            name: user.name
+          });
+        }
+      } catch (error) {
+        // Skip if user already exists (duplicate key error)
+        if (error.code !== 11000) {
+          console.error(`Error creating user ${userData.username}:`, error);
+        }
+      }
+    }
+
+    res.status(201).json({
+      success: true,
+      message: `${createdUsers.length} demo users created successfully`,
+      data: createdUsers
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 // Get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
   // Create token

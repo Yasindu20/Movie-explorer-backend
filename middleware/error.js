@@ -13,9 +13,20 @@ const errorHandler = (err, req, res, next) => {
     error = new ErrorResponse(message, 404);
   }
 
-  // Mongoose duplicate key
+  // Mongoose duplicate key - Improved error messages
   if (err.code === 11000) {
-    const message = 'Duplicate field value entered';
+    const field = Object.keys(err.keyValue)[0];
+    const value = err.keyValue[field];
+    let message;
+    
+    if (field === 'email') {
+      message = `An account with email '${value}' already exists. Please use a different email or try logging in.`;
+    } else if (field === 'username') {
+      message = `Username '${value}' is already taken. Please choose a different username.`;
+    } else {
+      message = `${field.charAt(0).toUpperCase() + field.slice(1)} '${value}' already exists`;
+    }
+    
     error = new ErrorResponse(message, 400);
   }
 
