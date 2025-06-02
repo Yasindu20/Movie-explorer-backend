@@ -14,6 +14,7 @@ const authRoutes = require('./routes/authRoutes');
 const discussionRoutes = require('./routes/discussionRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const listRoutes = require('./routes/listRoutes');
+const streamingRoutes = require('./routes/streamingRoutes'); // NEW
 
 // Import error middleware
 const errorHandler = require('./middleware/error');
@@ -36,13 +37,21 @@ app.use('/api/auth', authRoutes);
 app.use('/api/discussions', discussionRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/lists', listRoutes);
+app.use('/api/streaming', streamingRoutes); // NEW
 
 // Health check route
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'OK', 
     message: 'Movie Explorer API is running',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    features: [
+      'Authentication',
+      'Movie Discussions',
+      'Blog Posts',
+      'Movie Lists',
+      'Streaming Availability' // NEW
+    ]
   });
 });
 
@@ -53,6 +62,7 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+  console.log(`Streaming feature: ${process.env.WATCHMODE_API_KEY ? 'Enabled with WatchMode API' : 'Enabled with mock data'}`);
 });
 
 // Handle unhandled promise rejections
