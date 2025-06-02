@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const reviewSynthesisRoutes = require('./routes/reviewSynthesisRoutes');
+require('./jobs/backgroundJobs');
 
 // Load env vars
 dotenv.config();
@@ -37,7 +39,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/discussions', discussionRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/lists', listRoutes);
-app.use('/api/streaming', streamingRoutes); // NEW
+app.use('/api/streaming', streamingRoutes); 
+app.use('/api/reviews', reviewSynthesisRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
@@ -50,7 +53,7 @@ app.get('/api/health', (req, res) => {
       'Movie Discussions',
       'Blog Posts',
       'Movie Lists',
-      'Streaming Availability' // NEW
+      'Streaming Availability' 
     ]
   });
 });
