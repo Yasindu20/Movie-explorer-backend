@@ -14,3 +14,5 @@ router.get('/synthesis/:movieId/status', getSynthesisStatus);
 
 // Protected routes (Admin only)
 router.post('/synthesis/:movieId', protect, authorize('admin'), generateMovieReviewSynthesis);
+
+module.exports = router;
