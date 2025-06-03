@@ -3,6 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const reviewSynthesisRoutes = require('./routes/reviewSynthesisRoutes');
+const userReviewRoutes = require('./routes/userReviewRoutes');
 require('./jobs/backgroundJobs');
 
 // Load env vars
@@ -41,6 +42,7 @@ app.use('/api/blogs', blogRoutes);
 app.use('/api/lists', listRoutes);
 app.use('/api/streaming', streamingRoutes); 
 app.use('/api/reviews', reviewSynthesisRoutes);
+app.use('/api/user-reviews', userReviewRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
