@@ -1,7 +1,7 @@
 const UserReview = require('../models/UserReview');
 const AIReviewAssistant = require('../utils/aiReviewAssistant');
 const ErrorResponse = require('../utils/errorResponse');
-const { fetchMovieDetails } = require('../api/tmdbApi');
+const { fetchMovieDetails } = require('../utils/tmdbApi');
 
 const aiAssistant = new AIReviewAssistant();
 
